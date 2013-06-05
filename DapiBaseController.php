@@ -8,12 +8,28 @@ class DapiBaseController {
     $this->dapi = $dapi;
   }
 
-  public function authenticate($auth_types='basic') {
-    if(!is_array($auth_types))
-      $auth_types = array($auth_types);
-
-    if(in_array('basic',$auth_types))
-      return $this->basic_auth();
+  public function authenticate() {
+    
+	$auth_types = apply_filters( 'dapi_auth_types' , $this->dapi->auth_types );
+	
+	if(!is_array($auth_types))
+		$this->render_unauthorized(__('No valid authorization method is available.', 'wp-dope-api'));
+		
+    if ( in_array( $this->auth , $auth_types ) ) {
+		switch ($this->auth) {
+			case 'basic' :
+				return $this->basic_auth();
+			break;
+			case 'key' :
+				return $this->key_auth();
+			break;			
+			default :
+				return $this->basic_auth();
+			break;
+		} 
+	} else {
+		$this->render_unauthorized(__('This is not a valid authorization method.', 'wp-dope-api'));
+	}
   }
 
   // Used to validate required arguments to be passed to the api endpoint
@@ -55,6 +71,15 @@ class DapiBaseController {
 
       return $user;
     }
+  }
+
+  /** This authenticates the wordpress user with a shared key authentication */
+  public function key_auth() {
+    //check key against users
+
+	//for testing only…
+	$this->render_unauthorized(__('This is a valid attempt at shared key authorization. But we are not quite ready yet.', 'wp-dope-api'));
+
   }
 
   // Uses the wp_query object to determine the format of the response

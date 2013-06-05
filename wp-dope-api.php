@@ -36,6 +36,7 @@ class WpDopeApi {
     $this->auth = DAPI_AUTH_METHOD; // This is the type of authentication we'll be using
     $this->endpoints = array(); // initialize the endpoints array
     $this->query_vars = array( 'plugin', 'action', 'format' );
+    $this->auth_types = array( 'basic', 'key' );	// could be defined in admin page or config to let user setuo allowed auth types?
     $this->rules = array(
       "{$this->slug}\$" => 'index.php?plugin=dapi&action=posts&format=json',
       "{$this->slug}/([^/]+)\.([^/]+)\$" => 'index.php?plugin=dapi&action=$matches[1]&format=$matches[2]',

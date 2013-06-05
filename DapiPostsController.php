@@ -22,7 +22,7 @@ class DapiPostsController extends DapiBaseController {
 
   public function my_posts() {
     $this->accepted_http_methods('get');
-    $user = $this->authenticate('basic');
+    $user = $this->authenticate();
 
     $posts = get_posts(array('numberposts' => -1, 'author' => $user->ID));
     
@@ -32,7 +32,7 @@ class DapiPostsController extends DapiBaseController {
   /** Create a new post **/
   public function new_post() {
     $this->accepted_http_methods('post');
-    $user = $this->authenticate('basic');
+    $user = $this->authenticate();
     $this->required_args( array( 'post_title', 'post_content' ) );
      
     $args = array( 'post_title'   => $_REQUEST['post_title'],
